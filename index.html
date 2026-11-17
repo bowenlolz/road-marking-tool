@@ -20,16 +20,16 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 </style></head><body>
 <div id="L">
 <h4>案號 / 地址 <button id="cfgb" type="button" style="float:right" title="標線項目設定">⚙ 設定</button><button id="hpb" type="button" style="float:right" title="使用說明">📖 說明</button></h4><select id="site" style="display:none"></select>
-<div class="nt" style="margin:0">下方計算式文字可直接修改(留空白格式請用換行),字級可調。</div><input id="no" placeholder="案號 例:D301030179" style="width:100%"><input id="ad" placeholder="地址 例:東昇路366號" style="width:100%">
+<div class="nt" style="margin:0">下方計算式文字可直接修改(留空白格式請用換行),字級可調。</div><input id="no" placeholder="案號 例:A000000001" style="width:100%"><input id="ad" placeholder="地址 例:中正路100號" style="width:100%">
 <h4>計算式文字</h4><textarea id="ct" rows="5" style="width:100%;font:12px monospace"></textarea>
 <div class="f"><label>文字大小(空白=預設)</label><input id="cfs" type="number" step="1" min="4" placeholder="例:16"></div><button id="ctr" type="button">還原自動產生</button><div id="ctw" class="wr" hidden style="margin:4px 0">⚠ 標線內容已變動,但計算式文字是手動修改的版本,可能對不上。請按「還原自動產生」重算,或確認無誤後按 <button id="ctk" type="button">已確認,保留手動文字</button></div>
 <button id="addSite" style="display:none"></button><button id="delSite" style="display:none"></button>
-<div class="f"><input id="rn" placeholder="路名(例:吉善路)" style="width:130px"><label style="flex:none"><input id="rnv" type="checkbox" style="width:auto"> 直排</label><button id="rnb">＋路名</button></div>
+<div class="f"><input id="rn" placeholder="路名(例:中正路)" style="width:130px"><label style="flex:none"><input id="rnv" type="checkbox" style="width:auto"> 直排</label><button id="rnb">＋路名</button></div>
 <h4>標線項目</h4><input id="q" placeholder="搜尋名稱/編號(例:停車、箭頭)" style="width:100%">
 <select id="item" size="6" style="width:100%"></select>
 <div id="info" class="nt"></div>
 <h4>輸入尺寸</h4><div id="form"></div>
-<div class="f"><label>備註/路段</label><input id="rem" placeholder="例:東昇路" style="width:140px"></div>
+<div class="f"><label>備註/路段</label><input id="rem" placeholder="例:中正路" style="width:140px"></div>
 <button id="add" style="font-weight:bold">＋加入此案件</button><button id="cancel" hidden>取消編輯</button><button id="del" hidden style="color:#b91c1c">🗑 刪除此圖</button>
 <div style="margin:4px 0"><button id="undo" type="button" title="Ctrl+Z">↶ 復原</button><button id="redo" type="button" title="Ctrl+Y">↷ 重做</button></div>
 <h4>圖面位置</h4>
@@ -67,7 +67,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <tr><td>復原/重做</td><td>Ctrl+Z / Ctrl+Y 或按鈕</td><td>按「復原」「重做」</td></tr></table>
 <p>位置也可以直接填 X、Y(公尺)和角度;方向按鈕可快速設成 0、90、180、270 度。</p>
 <h3>三、標線項目與編號</h3>
-<ul><li>編號依 111 年度「標線面積計算方式說明」原圖,例如 3 路面邊線、10 禁止停車線。</li>
+<ul><li>編號依契約圖說「標線面積計算方式說明」原圖,例如 3 路面邊線、10 禁止停車線。</li>
 <li>後來新增的項目掛在相近項目下:<b>3-1、10-1、11-1</b> 是圓弧轉彎;<b>11-2</b> 是可選顏色的直線標線;<b>13-1、13-2</b> 是網狀線部分復舊(外線、內線)。</li>
 <li>有「組」字的項目(5組、14組、16組、20a組、20d組、31組)會一次畫出整組圖形並分項計算。</li>
 <li>「註記」和「參考線」只畫在圖上,不算面積,可用來標路名、道路邊界或管溝範圍。</li>
@@ -101,7 +101,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <li>清除瀏覽資料、換瀏覽器或換裝置,資料不會跟著走。重要案件請按「儲存專案(JSON)」存成檔案,之後用「開啟專案」讀回。</li>
 <li>手機和電腦的資料各自獨立,要互通請用專案檔搬移。</li></ul>
 <h3>十、注意事項</h3>
-<ul><li>面積公式依 111 年度(第三次派工)計算式。網狀線全幅(13)的內線採 (W−0.4)(B−0.4)。</li>
+<ul><li>面積公式依契約圖說的標線面積計算式。網狀線全幅(13)的內線採 (W−0.4)(B−0.4)。</li>
 <li>槽化線單實線(27a)的 1/2、Y 型線(27b)的 2/5 為原計算式規定,原圖未說明依據,必要時請向承辦確認。</li>
 <li>圖形、箭頭依原圖輪廓繪製;標字以電腦字型顯示,非原圖變體字。</li></ul>
 </template>
@@ -200,7 +200,7 @@ DI('2','2','行車分向線','§181','黃虛線 線寬10cm;段長4m 間距6m',C.
 LI('3','3','路面邊線','§183','白實線 線寬15cm',[[0,.15,C.W]],'0.15',s=>[pl([[-.2,-.45],[s+.2,-.45]],.02,C.GY),nt(s+.9,-.45,'路緣')]);
 LI('4','4','快慢車道分隔線','§183-1','白實線 線寬10cm',[[0,.1,C.W]],'0.1');
 add({id:'5a',c:'5a',n:'枕木紋行人穿越道線',rule:'§185',sp:'白實線 條紋寬40cm;條紋長Ld m,間隔80cm(每組120cm)',p:[P_('Ld','條紋長 Ld(m)',1),P_('La','行穿道寬 La(m,沿車行方向)',4),P_('N','條數 N(空白=自動)',null,{auto:p=>Math.max(1,Math.floor((p.La+.8)/1.2+1e-6))})],e:'N*Ld*0.4',f:'A=N×Ld×0.4',gen:p=>crossG(p,false)});
-add({id:'5b',c:'5b',n:'枕木紋行人穿越道線(綠斑馬)',rule:'§185;綠斑馬依臺中市交通局派工補繪',sp:'綠底白實線;寬Ld 長La',p:[P_('Ld','寬 Ld(m)',1),P_('La','長 La(m)',4),P_('N','白條數 N(空白=自動)',null,{auto:p=>Math.max(1,Math.floor((p.La+.8)/1.2+1e-6))})],e:'Ld*La-N*Ld*0.4',f:'A(綠)=Ld×La−A(白)',gen:p=>crossG(p,true),chk:'顏色:綠底+白條紋;面積為綠色部分(扣除白條)'});
+add({id:'5b',c:'5b',n:'枕木紋行人穿越道線(綠斑馬)',rule:'§185;綠斑馬依主管機關派工補繪',sp:'綠底白實線;寬Ld 長La',p:[P_('Ld','寬 Ld(m)',1),P_('La','長 La(m)',4),P_('N','白條數 N(空白=自動)',null,{auto:p=>Math.max(1,Math.floor((p.La+.8)/1.2+1e-6))})],e:'Ld*La-N*Ld*0.4',f:'A(綠)=Ld×La−A(白)',gen:p=>crossG(p,true),chk:'顏色:綠底+白條紋;面積為綠色部分(扣除白條)'});
 add({id:'5c',c:'5c',n:'視障引導線',rule:'§185',sp:'白實線 線寬5cm,間隔5cm,1組3條;厚6mm(×3)',p:[pL('長度 Ld(m)',1)],e:'L*0.05*3*3',f:'A=Ld×0.05×3×3',lin:['L','0.05*3*3'],gen:p=>guideG(p.L),chk:'×3=厚度6mm÷標準2mm'});
 LI('6','6','停止線','§170','白實線 線寬40cm',[[0,.4,C.W]],'0.4');
 LI('7a','7a','分向限制線:無分隔島','§165','雙黃實線 線寬10cm',[[-.1,.1,C.Y],[.1,.1,C.Y]],'2*0.1',s=>[nt(s/2,-.6,'← 行車方向'),nt(s/2,.65,'行車方向 →')]);
@@ -213,10 +213,10 @@ LI('10','10','禁止停車線','§168','黃實線 線寬10cm;距路面邊緣30cm
 LI('11','11','禁止臨時停車線','§169','紅色實線 線寬10cm;距路面邊緣30cm',[[0,.1,C.R]],'0.1',s=>[pl([[-.2,-.3],[s+.2,-.3]],.02,C.GY),nt(s+.9,-.3,'路緣'),dm([s+.4,-.3],[s+.4,0],'D=30',1,14)]);
 FX('12a','12a','讓路線:白色倒三角形','§172','白色倒三角形;寬120 全長300(上部60實心,其餘空心,框線15cm)',C.W,'1.26',p=>[pg([[-.6,0],[.6,0],[.48,.6],[-.48,.6]],C.W),pl([[-.39,.6],[.39,.6],[0,2.72]],.15,C.W,true),pg([[-.07,2.6],[.07,2.6],[0,3]],C.W),dm([-.6,0],[.6,0],'120',1,14),dm([.7,0],[.7,.6],'60',1,12),dm([-.7,0],[-.7,3],'300',-1,12)],'面積依原圖固定 1.26㎡');
 add({id:'12b',c:'12b',n:'讓路線:平行白虛線',rule:'§172',sp:'白虛線 每段長60cm×寬30cm,間距40cm,上下兩排',p:[P_('n','每排段數',3),P_('r','排數',2)],e:'n*r*0.6*0.3',f:'A=段數N×0.6×0.3(N=每排×排數)',gen:p=>{const P=[];for(let j=0;j<p.r;j++)for(let i=0;i<p.n;i++)P.push(rect(i,j*.6,.6,.3,C.W));P.push(dm([0,0],[.6,0],'60',1,14),dm([.6,0],[1,0],'40',1,14),dm([-.1,0],[-.1,.3],'30',-1,12));return P}});
-add({id:'13',c:'13',n:'網狀線(外線+內線)',rule:'§173',sp:'黃實線;外線寬20cm,內線寬10cm依行車方向成45°,間隔D',p:[P_('W','寬 W(m)',6),P_('B','長 B(m)',3),P_('D','內線間隔 D(m)',1)],e:'(W+B)*2*0.2+(W-0.4)*(B-0.4)/D**2*(D**2-(D-0.1)**2)',f:'A=(W+B)×2×0.2+(W−0.4)(B−0.4)/D²×(D²−(D−0.1)²)',gen:genNet,chk:'已更正:內線面積應扣除外線寬,為(W−0.4)(B−0.4)(112年度公式);111年度原式 (W−0.2)(B−0.2) 偏大'});
+add({id:'13',c:'13',n:'網狀線(外線+內線)',rule:'§173',sp:'黃實線;外線寬20cm,內線寬10cm依行車方向成45°,間隔D',p:[P_('W','寬 W(m)',6),P_('B','長 B(m)',3),P_('D','內線間隔 D(m)',1)],e:'(W+B)*2*0.2+(W-0.4)*(B-0.4)/D**2*(D**2-(D-0.1)**2)',f:'A=(W+B)×2×0.2+(W−0.4)(B−0.4)/D²×(D²−(D−0.1)²)',gen:genNet,chk:'已更正:內線面積應扣除外線寬,為(W−0.4)(B−0.4)(後續年度公式);契約原式 (W−0.2)(B−0.2) 偏大'});
 LI('13o','13-1','網狀線:外線(部分復舊)','§173','黃實線 外線寬20cm;填實際復舊的外線長度',[[0,.2,C.Y]],'0.2');IT[IT.length-1].pr=[[0,.2,C.Y]];
 add({id:'13i',c:'13-2',n:'網狀線:內線(部分復舊)',rule:'§173',sp:'黃實線 內線寬10cm 斜45° 間隔D;填復舊區塊的寬與長(不含外線)',p:[P_('W','復舊區塊寬 W(m)',1),P_('B','復舊區塊長 B(m)',3),P_('D','內線間隔 D(m)',1)],e:'W*B/D**2*(D**2-(D-0.1)**2)',f:'A=W×B/D²×(D²−(D−0.1)²)',gen:p=>{const W=+p.W||0,B=+p.B||0,d=+p.D||1,R=[[0,0],[W,0],[W,B],[0,B]],P=[pl(R,.02,C.GY,true)];[Math.PI/4,-Math.PI/4].forEach(g=>hatch(R,g,d).forEach(s=>P.push(pl(s,.1,C.Y))));P.push(dm([0,B],[W,B],'W='+fmm(W),-1,16),dm([0,0],[0,B],'B='+fmm(B),-1,16),nt(W/2,-.5,'內線 45° 間隔 D='+fmm(d)));return P}});
-add({id:'14a',c:'14a',n:'機慢車停等區線',rule:'§174-2',sp:'白實線;前後線寬20cm,二側線寬10cm',p:[P_('Lf','前後段長 Lf(m)',2.5),P_('Ls','二側段長 Ls(m)',4)],e:'Lf*0.2+Ls*0.1',f:'A=Lf×0.2+Ls×0.1',gen:p=>gen14({W:p.Lf,H:p.Ls},false),chk:'依111年度公式 A=Lf×0.2+Ls×0.1;Lf、Ls 請填實際計價長度'});
+add({id:'14a',c:'14a',n:'機慢車停等區線',rule:'§174-2',sp:'白實線;前後線寬20cm,二側線寬10cm',p:[P_('Lf','前後段長 Lf(m)',2.5),P_('Ls','二側段長 Ls(m)',4)],e:'Lf*0.2+Ls*0.1',f:'A=Lf×0.2+Ls×0.1',gen:p=>gen14({W:p.Lf,H:p.Ls},false),chk:'依契約計算式 A=Lf×0.2+Ls×0.1;Lf、Ls 請填實際計價長度'});
 FX('14b','14b','機車圖案參考圖','§174-2','白色圖形 寬90 長250',C.W,'0.9*2.5',()=>rider());
 FX('14c','14c','縮小型指向線(直線箭頭)','§174-2','白色圖形;寬30 長100',C.W,'0.15',()=>smallArrow('a').concat([dm([-.15,-1],[.15,-1],'30',1,12),dm([.35,-1],[.35,0],'100',1,12)]),'面積依原圖固定');
 FX('14d','14d','縮小型指向線(弧形箭頭)','§174-2','白色圖形',C.W,'0.1',()=>smallArrow('b'),'面積依原圖固定');
@@ -224,7 +224,7 @@ add({id:'15',c:'15',n:'機慢車左轉待轉區線',rule:'§191',sp:'白色長�
 LI('16a','16a','自行車穿越道線:平行白實線','§186-1','白實線 線寬10cm,兩條',[[-.55,.1,C.W],[.55,.1,C.W]],'2*0.1');
 FX('16b','16b','自行車穿越道線:自行車圖形','§186-1','白色圖形 寬100 長180',C.W,'1.0*1.8',()=>bike());
 add({id:'16c',c:'16c',n:'自行車穿越道線:磚紅底',rule:'§186-1',sp:'磚紅底(圖示灰色);寬W 長L(W=兩線中心距)',p:[P_('W','寬 W(m)',1.1),P_('L','長 L(m)',6)],e:'(W-0.1)*L',f:'A=(W−0.1)×L',gen:p=>gen16(p,true)});
-FX('17a','17a','指向線:指示直行','§188;依臺中市交通局派工補繪方式計算','白色圖形 直線箭頭 寬90 長500',C.W,'2.3',()=>arrow('a'),'示意形狀,面積依規定值 2.30㎡');
+FX('17a','17a','指向線:指示直行','§188;依主管機關派工補繪方式計算','白色圖形 直線箭頭 寬90 長500',C.W,'2.3',()=>arrow('a'),'示意形狀,面積依規定值 2.30㎡');
 FX('17b','17b','指向線:指示轉彎','§188','白色圖形 弧形箭頭',C.W,'2',()=>arrow('b'),'示意形狀,面積依規定值 2.00㎡');
 FX('17c','17c','指向線:指示直行與轉彎','§188','白色圖形 直行與左彎箭頭',C.W,'3.4',()=>arrow('c'),'示意形狀,面積依規定值 3.40㎡');
 FX('17d','17d','指向線:指示右彎與左彎','§188','白色圖形 右彎與左彎箭頭',C.W,'3.2',()=>arrow('d'),'示意形狀,面積依規定值 3.20㎡');
@@ -243,8 +243,8 @@ FX('20b','20b','身心障礙圖形','§190','白色圖形 90×90;顏色應與底
 add({id:'20c',c:'20c',n:'下車區',rule:'依建築物無障礙設施設計規範',sp:'白實線 10cm;斜紋線寬10cm 間隔40cm 斜45°',p:[P_('L','每格長 L(m)',5),P_('W','寬 W(m)',1.5)],e:'(L+W*2)*0.1+0.2*L*W',f:'A=(L+W×2)×0.1+0.2×L×W',gen:p=>{const R=[[0,0],[p.W,0],[p.W,p.L],[0,p.L]],P=[pl([[0,p.L],[0,0],[p.W,0],[p.W,p.L]],.1,C.W)];hatch(R,-Math.PI/4,.5).forEach(s=>P.push(pl(s,.1,C.W)));P.push(dm([0,p.L],[p.W,p.L],'W='+fmm(p.W),-1,16),dm([0,0],[0,p.L],'L='+fmm(p.L),-1,16));return P}});
 add({id:'20d_w',c:'20d 白線',n:'孕婦及育有六歲以下兒童者停車位:白實線',rule:'孕婦及育有六歲以下兒童者停車位設置管理辦法',sp:'白實線 線寬10cm',p:[P_('N','格數 N',1),P_('L','每格長 L(m)',5),P_('W','寬 W(m)',2.5)],e:'(N*L+(N+1)*W)*0.1',f:'A=(N×L+(N+1)×W)×0.1',gen:p=>stalls(p.N,p.L,p.W,C.W)});
 add({id:'20d_p',c:'20d 粉紅線',n:'孕婦及育有六歲以下兒童者停車位:粉紅實線',rule:'同上',sp:'粉紅實線 線寬10cm',p:[P_('Li','粉紅線長 Li(m)',4.8),P_('Wi','粉紅線寬 Wi(m)',2.4),P_('N','格數 N',1)],e:'(Li+Wi*2)*0.1*N',f:'A=(Li+Wi×2)×0.1×N',gen:p=>uBox(p.N,p.Li,p.Wi,C.P)});
-TXF('20e','20e','標字:親子車格','同上','白色變體字 每字50×50',C.W,'親子車格',.5,.5,'4*0.5*0.5','已更正:4個字元各50×50cm,每處 1.00㎡(111年度原式 0.25㎡ 僅算一字)');
-DI('21a','21a','公車停靠區:前後導引','依臺中市交通局派工補繪方式計算','白虛線 線寬10cm;段長及間距各50cm',C.W,.1,.5,.5);
+TXF('20e','20e','標字:親子車格','同上','白色變體字 每字50×50',C.W,'親子車格',.5,.5,'4*0.5*0.5','已更正:4個字元各50×50cm,每處 1.00㎡(契約原式 0.25㎡ 僅算一字)');
+DI('21a','21a','公車停靠區:前後導引','依主管機關派工補繪方式計算','白虛線 線寬10cm;段長及間距各50cm',C.W,.1,.5,.5);
 TXF('21b','21b','標字:公車停靠區','同上','白色變體字 高250 寬100',C.W,'公車停靠區',1,2.5,'5*2.5');
 TXF('22','22','標字:慢','§163','白色變體字 高250 寬100',C.W,'慢',1,2.5,'1.0*2.5');
 TXF('23','23','標字:禁行機車','§178','黃色變體字 高250 寬100',C.Y,'禁行機車',1,2.5,'1.0*2.5*4');
@@ -285,7 +285,7 @@ const MC=[
 MC.forEach(m=>{m.macro=1;m.c={M14:'14組',M16:'16組',M5a:'5組',M20a:'20a組',M20d:'20d組',M31:'31組'}[m.id]||'★';IT.push(m)});
 const BNC={w:['白色',C.W],y:['黃色',C.Y],r:['紅色',C.R],b:['藍色',C.B],g:['綠色',C.G],p:['粉紅色',C.P]};
 add({id:'BN',c:'11-2',n:'直線標線(顏色可選)',rule:'依設計/派工',sp:'骨材標線實線;顏色、線寬可選;面積=長度×線寬',p:[pL('長度 L(m)',1),P_('w','線寬(m)',.1),P_('col','顏色','w',{t:'sel',o:Object.keys(BNC).map(k=>[k,BNC[k][0]])})],e:'L*w',f:'A=L×線寬',pr:r=>[[0,+r.w||.1,(BNC[r.col]||BNC.w)[1]]],gen:p=>lineSet({L:p.L},[[0,+p.w||.1,(BNC[p.col]||BNC.w)[1]]])});
-add({id:'TXT',c:'註記',n:'路名/文字註記(不計面積)',sp:'自訂路名/文字(可選顏色、字高、直排),僅標示於竣工圖',noarea:1,p:[P_('t','文字','吉善路',{t:'txt'}),P_('h','字高(m)',1.5),P_('v','排列','h',{t:'sel',o:[['h','橫排'],['v','直排']]}),P_('col','顏色','b',{t:'sel',o:[['b','藍色'],['w','白/黑色'],['r','紅色'],['y','黃色']]})],e:'0',f:'',gen:p=>{const t=String(p.t||''),h=+p.h||1.5,c={b:C.B,w:C.W,r:C.R,y:C.Y}[p.col]||C.B;return[...t].map((ch,i)=>p.v=='v'?tx(0,(i+.5)*h*1.1,h,ch,c,h):tx((i+.5)*h*1.05,0,h,ch,c,h))}});
+add({id:'TXT',c:'註記',n:'路名/文字註記(不計面積)',sp:'自訂路名/文字(可選顏色、字高、直排),僅標示於竣工圖',noarea:1,p:[P_('t','文字','中正路',{t:'txt'}),P_('h','字高(m)',1.5),P_('v','排列','h',{t:'sel',o:[['h','橫排'],['v','直排']]}),P_('col','顏色','b',{t:'sel',o:[['b','藍色'],['w','白/黑色'],['r','紅色'],['y','黃色']]})],e:'0',f:'',gen:p=>{const t=String(p.t||''),h=+p.h||1.5,c={b:C.B,w:C.W,r:C.R,y:C.Y}[p.col]||C.B;return[...t].map((ch,i)=>p.v=='v'?tx(0,(i+.5)*h*1.1,h,ch,c,h):tx((i+.5)*h*1.05,0,h,ch,c,h))}});
 add({id:'REF',c:'參考',n:'參考線(道路邊界/中心線,不計面積)',sp:'灰色參考線,僅標示於竣工圖',noarea:1,p:[pL('長度(m)',20),P_('st','線型','d',{t:'sel',o:[['d','虛線'],['s','實線']]})],e:'0',f:'',gen:p=>lineSet(p,[[0,.05,C.GY]])});
 const CFGK='mkcfg';let CFG={over:{},custom:[]};try{const j=JSON.parse(localStorage.getItem(CFGK)||'null');if(j&&typeof j=='object')CFG={over:j.over||{},custom:Array.isArray(j.custom)?j.custom:[]}}catch(e){}
 const CCOL={w:C.W,y:C.Y,r:C.R,g:C.G,b:C.B},CCOLN={w:'白色',y:'黃色',r:'紅色',g:'綠色',b:'藍色'};
