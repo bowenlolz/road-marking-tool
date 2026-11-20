@@ -310,7 +310,7 @@ function res(it,v){const r={...v};it.p.forEach(p=>{if(p.t=='txt'||p.t=='sel'){if
  it.p.forEach(p=>{if(p.auto&&(r[p.k]==null))r[p.k]=p.auto(r)});return r}
 const evl=(e,r)=>{const k=Object.keys(r);return new Function(...k,'return '+e)(...k.map(x=>r[x]))};
 const areaOf=(it,r)=>r3(evl(it.e,r));
-const subst=(e,r)=>e.replace(/[A-Za-z]+/g,m=>m in r?(typeof r[m]=='number'?r3(r[m]):r[m]):m);
+const subst=(e,r)=>e.replace(/[A-Za-z]+/g,m=>m in r?(typeof r[m]=='number'?r3(r[m]):r[m]):m).replace(/\*\*2/g,'²').replace(/\*\*/g,'^');
 const hasBone=it=>!!it.bone||(it.macro&&it.parts&&(()=>{try{return it.parts(res(it,{})).some(([id])=>BYID[id]&&BYID[id].bone)}catch(e){return false}})());
 function expand(en){const it=BYID[en.id],r=res(it,en.v);if(!it.macro)return[{it,r}];return it.parts(r).map(([id,v])=>({it:BYID[id],r:res(BYID[id],v)}))}
 function report(s){const g={},o=[],tot=[],bn=[],bo=[];s.ent.forEach(en=>expand(en).filter(x=>!x.it.noarea).forEach(x=>{const k=x.it.id+(x.it.id=='BN'?'|'+x.r.col:'');(g[k]=g[k]||{it:x.it,l:[]}).l.push(x.r)}));
