@@ -47,7 +47,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 
 <div class="f"><label>CAD 文字字型</label><select id="font"><option value="mingliu">新細明體 mingliu.ttc</option><option value="msjh">微軟正黑體 msjh.ttc</option><option value="simsun">宋體 simsun.ttc</option><option value="kai">標楷體 kaiu.ttf</option></select></div>
 <label style="display:block;margin:4px 0">匯出樣式 <select id="sty"><option value="n">標準(依比例,小字)</option><option value="s">簡潔(大字,如範例)</option></select></label>
-<label style="display:block;margin:4px 0">匯出紙張與方向 <select id="ori"><option value="l">A5 橫式(高度依內容)</option><option value="p">A5 直式(高度依內容)</option><option value="l4">A4 橫式(高度依內容)</option><option value="p4">A4 直式(高度依內容)</option></select></label>
+<label style="display:block;margin:4px 0">匯出紙張與方向 <select id="ori"><option value="l">A5 橫式(高度依內容)</option><option value="p">A5 直式(整頁)</option><option value="l4">A4 橫式(高度依內容)</option><option value="p4">A4 直式(整頁)</option></select></label>
 <button id="dxf">匯出 DXF(CAD)</button><button id="pdf">匯出 PDF(列印→另存PDF)</button>
 <button id="tg">顯示/隱藏右側計算式</button><button id="mt" type="button">隱藏中間圖面</button><button id="sv">儲存專案(JSON)</button><button id="ld">開啟專案</button><input type="file" id="fi" accept=".json" hidden>
 </div>
@@ -470,15 +470,15 @@ function dl(n,t,ty){const a=document.createElement('a');a.href=URL.createObjectU
 $('sv').onclick=()=>dl('標線專案.json',JSON.stringify(S),'application/json');
 $('ld').onclick=()=>$('fi').click();$('fi').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{S=JSON.parse(t);S.sites=[S.sites[0]||S0()];S.cur=0;stopEdit();defPos();refresh()})};
 // ===== 分頁(PDF / DXF 共用) =====
-let PW=840;const ori=()=>$('ori').value[0]=='p',a4=()=>$('ori').value.slice(-1)=='4',sim=()=>$('sty').value=='s',pw=()=>sim()?(a4()?960:680):a4()?(ori()?840:1188):(ori()?595:840),pk=()=>a4()?1.414:1,gopt=()=>sim()?{cap:40*pk(),compact:true,maxH:200*pk(),lh:12}:{cap:14*pk(),compact:true};
+let PW=840;const ori=()=>$('ori').value[0]=='p',a4=()=>$('ori').value.slice(-1)=='4',sim=()=>$('sty').value=='s',pw=()=>sim()?(ori()?(a4()?680:482):(a4()?960:680)):a4()?(ori()?840:1188):(ori()?595:840),pk=()=>a4()?1.414:1,gopt=()=>ori()?(sim()?{cap:40*pk(),compact:false,lh:12}:{cap:30*pk(),compact:false}):sim()?{cap:40*pk(),compact:true,maxH:200*pk(),lh:12}:{cap:14*pk(),compact:true};
 const NOP=new Proxy({},{get:()=>()=>0});
-function pageH(s){const w=pw(),L=layoutInfo(),f=drawCase(NOP,s,0,0,w-28,5000,false,L.fs,0,null,-1,null,gopt());return Math.ceil(f.endY+28)}
+function pageH(s){const w=pw(),L=layoutInfo(),f=drawCase(NOP,s,0,0,w-28,5000,false,L.fs,0,null,-1,null,{...gopt(),compact:true}),h=Math.ceil(f.endY+28);return ori()?Math.max(h,Math.round(w*1.414)):h}
 function layoutInfo(){return{per:1,cols:1,rows:1,fs:sim()?20:11}}
 function drawPage(R,list,ox,pr,start){PW=pw();const L=layoutInfo(),M=14,PH=pageH(list[0]),cw=PW-2*M,ch=PH-2*M;R.box(ox,0,PW,PH);
  list.forEach((s,i)=>drawCase(R,s,ox+M+(i%L.cols)*cw,M+Math.floor(i/L.cols)*ch,cw,ch,pr,L.fs,start+i,null,-1,null,gopt()))}
 const chunks=()=>{const L=layoutInfo(),o=[];for(let i=0;i<S.sites.length;i+=L.per)o.push([i,S.sites.slice(i,i+L.per)]);return o};
 $('pdf').onclick=()=>{if(ctStale(site())&&!confirm('計算式文字是手動修改的版本,與目前標線可能不一致,仍要匯出?'))return;const imgs=chunks().map(([st,l])=>{const c=document.createElement('canvas');const W0=pw(),H0=pageH(l[0]);c.width=W0*2;c.height=H0*2;const x=c.getContext('2d');x.scale(2,2);x.fillStyle='#fff';x.fillRect(0,0,W0,H0);drawPage(CR(x,true),l,0,true,st);return c.toDataURL()});
- const pg=ori()&&!sim();let st=$('pgs');if(!st){st=document.createElement('style');st.id='pgs';document.head.appendChild(st)}st.textContent='@media print{@page{size:'+(a4()?'A4':'A5')+' '+(pg?'portrait':'landscape')+';margin:6mm}#P img{max-height:'+(a4()?(pg?'285mm':'198mm'):(pg?'198mm':'136mm'))+'!important}}';
+ const pg=ori();let st=$('pgs');if(!st){st=document.createElement('style');st.id='pgs';document.head.appendChild(st)}st.textContent='@media print{@page{size:'+(a4()?'A4':'A5')+' '+(pg?'portrait':'landscape')+';margin:6mm}#P img{max-height:'+(a4()?(pg?'285mm':'198mm'):(pg?'198mm':'136mm'))+'!important}}';
  $('P').innerHTML=imgs.map(u=>'<img src="'+u+'">').join('');setTimeout(()=>print(),300)};
 // ===== DXF =====
 function tri(pts){let P=pts.slice(),a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1]}if(a<0)P.reverse();const out=[],cr=(a,b,c)=>(b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]);
