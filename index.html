@@ -318,7 +318,7 @@ function report(s){const g={},o=[],tot=[],bn=[],bo=[];s.ent.forEach(en=>expand(e
   const ln=it.lin?nm+':('+l.map(r=>r3(r[it.lin[0]])).join(' + ')+')*'+it.lin[1]+'='+ar+'㎡':nm+':'+l.map(r=>'('+subst(it.e,r)+')').join('+')+'='+ar+'㎡';
   if(it.bone){bn.push(ar);bo.push(ln)}else{tot.push(ar);o.push(ln)}});
  if(tot.length||!bn.length)o.push('合計:('+tot.join('+')+')='+r3(tot.reduce((a,b)=>a+b,0))+'㎡');
- if(bn.length){o.push(...bo);o.push('骨材標線合計(另計,不含於上列合計):('+bn.join('+')+')='+r3(bn.reduce((a,b)=>a+b,0))+'㎡')}return o}
+ if(bn.length){o.push(...bo);o.push('骨材標線合計:('+bn.join('+')+')='+r3(bn.reduce((a,b)=>a+b,0))+'㎡')}return o}
 // ===== 繪圖核心 =====
 function bbox(P){let a=1e9,b=1e9,c=-1e9,d=-1e9;const u=(x,y)=>{a=Math.min(a,x);c=Math.max(c,x);b=Math.min(b,y);d=Math.max(d,y)};
  P.forEach(g=>{if(g.p)g.p.forEach(q=>u(q[0],q[1]));else if(g.k=='dm'){u(g.a[0],g.a[1]);u(g.b[0],g.b[1])}else if(g.k=='ci'){u(g.x-g.r,g.y-g.r);u(g.x+g.r,g.y+g.r)}else if(g.k=='tx'){u(g.x-g.cw/2,g.y-g.h/2);u(g.x+g.cw/2,g.y+g.h/2)}else u(g.x,g.y)});
