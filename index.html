@@ -38,7 +38,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <div class="f"><label>角度(°,0=向右 90=向上)</label><input id="pa" type="number" step="any" value="0"></div>
 <div class="f"><label>朝向(圖形或線的方向)</label><span><button class="ab" data-a="0">→</button><button class="ab" data-a="90">↑</button><button class="ab" data-a="180">←</button><button class="ab" data-a="270">↓</button></span></div>
 <div class="f"><label>微調旋轉</label><span><button class="rb" type="button" data-d="15" title="逆時針 15°">⟲15°</button><button class="rb" type="button" data-d="5">⟲5°</button><button class="rb" type="button" data-d="-5">⟳5°</button><button class="rb" type="button" data-d="-15" title="順時針 15°">⟳15°</button></span></div>
-<div class="nt">在圖面上:拖曳圖示可移動位置;拖曳橘色 ↻ 圓點可旋轉,圓點在哪邊、箭頭或圖形就朝哪邊(自動對齊 45 度倍數);點圖示可編輯(編輯中按 Delete 鍵或「刪除此圖」可刪除);Ctrl+Z 復原;點空白處可設定新增位置(半透明為預覽);拖曳空白處可平移畫面、滾輪縮放、雙擊空白處還原視角。</div>
+<div class="nt">在圖面上:拖曳圖示可移動位置;拖曳橘色 ↻ 圓點可旋轉,圓點在哪邊、箭頭或圖形就朝哪邊(自動對齊 45 度倍數);點圖示可編輯(點選後按 Delete 或 Backspace 鍵,或按「刪除此圖」可刪除);Ctrl+Z 復原;點空白處可設定新增位置(半透明為預覽);拖曳空白處可平移畫面、滾輪縮放、雙擊空白處還原視角。</div>
 <label style="display:block;margin:4px 0"><input type="checkbox" id="gh" checked> 顯示半透明預覽圖示</label>
 <label style="display:block;margin:4px 0"><input type="checkbox" id="sb" checked> 圖面顯示比例尺(匯出也會帶出)</label>
 <button id="pvt" type="button">隱藏預覽圖</button><canvas id="pv" width="560" height="340"></canvas><div id="ar" class="nt" style="font-size:12px;color:#000"></div>
@@ -427,7 +427,7 @@ function refresh(){
  $('R').textContent=S.sites.map((s,i)=>title(i)+'\n'+calcLines(s).join('\n')).join('\n\n');
  {const st=ctStale(site());$('ctw').hidden=!st}
  pv();try{localStorage.setItem('mk3',JSON.stringify(S))}catch(e){}
- {const j=JSON.stringify(S.sites),now=Date.now();if(!HS.length){HS=[j];HI=0}else if(j!==HS[HI]){if(now-HT<700&&HI>0&&HC)HS[HI]=j;else{HS=HS.slice(0,HI+1);HS.push(j);if(HS.length>80)HS.shift();HI=HS.length-1}HC=true;HT=now}$('undo').disabled=HI<=0;$('redo').disabled=HI>=HS.length-1}}
+ {const j=JSON.stringify(S.sites),now=Date.now();if(!HS.length){HS=[j];HI=0}else if(j!==HS[HI]){if(now-HT<700&&HI>0&&HC&&JSON.stringify(JSON.parse(HS[HI])[0].ent)===JSON.stringify(S.sites[0].ent))HS[HI]=j;else{HS=HS.slice(0,HI+1);HS.push(j);if(HS.length>80)HS.shift();HI=HS.length-1}HC=true;HT=now}$('undo').disabled=HI<=0;$('redo').disabled=HI>=HS.length-1}}
 let HS=[],HI=0,HT=0,HC=false;
 function hist(d){const k=HI+d;if(k<0||k>=HS.length)return;HI=k;HC=false;S.sites=JSON.parse(HS[HI]);S.cur=0;stopEdit();buildForm();$('rem').value='';defPos();refresh()}
 const ctStale=s=>s.ct!=null&&s.ctb!=null&&report(s).join('\n')!==s.ctb;
@@ -459,7 +459,7 @@ $('add').onclick=()=>{const it=cur();if(!it)return;const en=draftEn();if(edit>=0
 $('item').onchange=()=>{if(edit>=0)stopEdit();buildForm();pv()};$('q').oninput=()=>{fillItems();buildForm();pv()};
 $('site').onchange=()=>{S.cur=+$('site').value;stopEdit();defPos();refresh()};
 $('ct').oninput=()=>{const s=site();if(s.ct==null||s.ctb==null)s.ctb=report(s).join('\n');s.ct=$('ct').value;refresh()};$('ctk').onclick=()=>{site().ctb=report(site()).join('\n');refresh()};$('undo').onclick=()=>hist(-1);$('redo').onclick=()=>hist(1);
-addEventListener('keydown',e=>{const t=e.target,inF=t&&(/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));if((e.ctrlKey||e.metaKey)&&!inF){const k=e.key.toLowerCase();if(k=='z'&&!e.shiftKey){e.preventDefault();hist(-1)}else if(k=='y'||(k=='z'&&e.shiftKey)){e.preventDefault();hist(1)}}else if((e.key=='Delete')&&!inF&&edit>=0){e.preventDefault();$('del').click()}});
+addEventListener('keydown',e=>{const t=e.target,inF=t&&(/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));if((e.ctrlKey||e.metaKey)&&!inF){const k=e.key.toLowerCase();if(k=='z'&&!e.shiftKey){e.preventDefault();hist(-1)}else if(k=='y'||(k=='z'&&e.shiftKey)){e.preventDefault();hist(1)}}else if((e.key=='Delete'||e.key=='Backspace')&&!inF&&edit>=0){e.preventDefault();$('del').click()}});
 $('del').onclick=()=>{if(edit<0)return;site().ent.splice(edit,1);stopEdit();buildForm();$('rem').value='';defPos();refresh()};$('cfs').oninput=()=>{const v=+$('cfs').value;site().cfs=v>0?v:0;refresh()};$('ctr').onclick=()=>{delete site().ct;delete site().ctb;$('ct').blur();refresh()};
 $('no').oninput=()=>{site().no=$('no').value;refresh()};$('ad').oninput=()=>{site().ad=$('ad').value;refresh()};
 $('addSite').onclick=()=>{S.sites.push(S0());S.cur=S.sites.length-1;stopEdit();defPos();refresh()};
