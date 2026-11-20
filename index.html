@@ -12,6 +12,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 #pv{background:#222;width:100%;height:clamp(130px,26vh,240px);border:1px solid #999;display:block}
 .nt{font-size:11px;color:#555;margin:2px 0}.wr{color:#b45309}
 #M{position:relative}#cv{touch-action:none}#zb{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:6px;z-index:5}#zb button{width:38px;height:38px;font-size:19px;border-radius:8px;border:1px solid #888;background:rgba(40,40,40,.85);color:#fff;margin:0}
+#pw{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:60;display:flex;flex-direction:column}#pw .ph{display:flex;gap:6px;align-items:center;padding:8px 10px;background:#fff;border-bottom:1px solid #ccc;flex-wrap:wrap}#pw .ph button{padding:6px 12px;margin:0}#pw .pb{flex:1;overflow:auto;padding:10px;text-align:center;-webkit-overflow-scrolling:touch}#pw img{max-width:100%;height:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.5);cursor:zoom-in}#pw img.z{max-width:none;width:200%;cursor:zoom-out}#pw .pn{font-size:12px;color:#555}
 #hp{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;display:flex;align-items:center;justify-content:center}#hp .hb{background:#fff;width:min(860px,96vw);height:92vh;height:92dvh;border-radius:8px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.4)}#hp .hh{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #ccc;font-size:15px}#hp .hc{flex:1;overflow:auto;padding:6px 18px 24px;font-size:14px;line-height:1.7}#hp h2{font-size:19px;margin:12px 0 4px}#hp h3{font-size:15px;margin:18px 0 6px;border-bottom:2px solid #2563eb;padding-bottom:2px}#hp .hl{background:#eff6ff;padding:8px 10px;border-radius:6px}#hp table{border-collapse:collapse;width:100%;font-size:13px}#hp th,#hp td{border:1px solid #ccc;padding:4px 6px;text-align:left}#hp th{background:#f3f4f6}#hp ul,#hp ol{padding-left:22px;margin:4px 0}
 @media(max-width:900px){body{flex-direction:column}#M{order:1;flex:none;height:44vh;height:44dvh;width:100%}#L{order:2;flex:1;width:100%;min-height:0;padding:10px 12px;font-size:15px}#R{display:none;order:3;width:100%;flex:none;max-height:30vh;border-left:0;border-top:1px solid #ccc}
  #L input,#L select,#L textarea{font-size:16px}#L button{padding:8px 12px;font-size:15px;margin:3px 2px}#L .f input,#L .f select{width:46%}#L .f label{font-size:14px}.nt{font-size:12.5px}.e{font-size:14px;padding:6px 0}.e a{padding:4px 6px;display:inline-block}#item{height:190px}#pv{height:180px}}
@@ -48,7 +49,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <div class="f"><label>CAD 文字字型</label><select id="font"><option value="mingliu">新細明體 mingliu.ttc</option><option value="msjh">微軟正黑體 msjh.ttc</option><option value="simsun">宋體 simsun.ttc</option><option value="kai">標楷體 kaiu.ttf</option></select></div>
 <label style="display:block;margin:4px 0">匯出樣式 <select id="sty"><option value="n">標準(依比例,小字)</option><option value="s">簡潔(大字,如範例)</option></select></label>
 <label style="display:block;margin:4px 0">匯出紙張與方向 <select id="ori"><option value="l">A5 橫式(高度依內容)</option><option value="p">A5 直式(整頁)</option><option value="l4">A4 橫式(高度依內容)</option><option value="p4">A4 直式(整頁)</option></select></label>
-<button id="dxf">匯出 DXF(CAD)</button><button id="pdf">匯出 PDF(列印→另存PDF)</button>
+<button id="prv" type="button" style="font-weight:bold">👁 成果預覽</button><button id="dxf">匯出 DXF(CAD)</button><button id="pdf">匯出 PDF(列印→另存PDF)</button>
 <button id="tg">顯示/隱藏右側計算式</button><button id="mt" type="button">隱藏中間圖面</button><button id="sv">儲存專案(JSON)</button><button id="ld">開啟專案</button><input type="file" id="fi" accept=".json" hidden>
 </div>
 <div id="M"><canvas id="cv"></canvas><div id="zb"><button id="zi" type="button" title="放大">＋</button><button id="zo" type="button" title="縮小">−</button><button id="zr" type="button" title="還原視角">⟲</button></div></div>
@@ -91,6 +92,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <h3>七、匯出</h3>
 <ul><li><b>匯出 DXF</b>:用 AutoCAD 開啟後另存 DWG。可選 CAD 文字字型。圖形單位不是實際公尺,量距離請看圖上比例尺。</li>
 <li><b>匯出 PDF</b>:會開啟列印視窗,印表機選「另存為 PDF」。紙張依「匯出紙張與方向」的選擇,高度依內容。</li>
+<li><b>成果預覽</b>:直接在畫面上看匯出後的樣子,手機也能用;可放大、下載成圖片(手機上也可長按圖片儲存或分享)。</li>
 <li>匯出樣式有「標準」和「簡潔(大字)」;紙張可選 A5 或 A4,橫式或直式。</li>
 <li>圖面右下角有比例尺,會自動避開標線,可在左側取消勾選。</li>
 <li>手機上列印和下載的方式依瀏覽器而定;正式出圖建議用電腦。</li></ul>
@@ -477,6 +479,12 @@ function layoutInfo(){return{per:1,cols:1,rows:1,fs:sim()?20:11}}
 function drawPage(R,list,ox,pr,start){PW=pw();const L=layoutInfo(),M=14,PH=pageH(list[0]),cw=PW-2*M,ch=PH-2*M;R.box(ox,0,PW,PH);
  list.forEach((s,i)=>drawCase(R,s,ox+M+(i%L.cols)*cw,M+Math.floor(i/L.cols)*ch,cw,ch,pr,L.fs,start+i,null,-1,null,gopt()))}
 const chunks=()=>{const L=layoutInfo(),o=[];for(let i=0;i<S.sites.length;i+=L.per)o.push([i,S.sites.slice(i,i+L.per)]);return o};
+$('prv').onclick=()=>{const l=chunks()[0],c=document.createElement('canvas'),W0=pw(),H0=pageH(l[1][0]);c.width=W0*2;c.height=H0*2;const x=c.getContext('2d');x.scale(2,2);x.fillStyle='#fff';x.fillRect(0,0,W0,H0);drawPage(CR(x,true),l[1],0,true,l[0]);const u=c.toDataURL('image/png');
+ let o=$('pw');if(o)o.remove();o=document.createElement('div');o.id='pw';const nm=$('ori').selectedOptions[0].textContent+' / '+$('sty').selectedOptions[0].textContent;
+ o.innerHTML='<div class="ph"><b>👁 成果預覽</b><span class="pn"></span><span style="flex:1"></span><button id="pwz" type="button">放大/縮小</button><button id="pwd" type="button">下載圖片</button><button id="pwc" type="button">關閉</button></div><div class="pb"><img alt="成果預覽"></div>';
+ o.querySelector('.pn').textContent=nm+(ctStale(site())?'  ⚠ 計算式為手動版本,與標線可能不一致':'');const im=o.querySelector('img');im.src=u;document.body.appendChild(o);
+ const tz=()=>im.classList.toggle('z');im.onclick=tz;o.querySelector('#pwz').onclick=tz;o.querySelector('#pwc').onclick=()=>o.remove();
+ o.querySelector('#pwd').onclick=()=>c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(site().no||'標線竣工圖')+'.png';a.click()},'image/png')};
 $('pdf').onclick=()=>{if(ctStale(site())&&!confirm('計算式文字是手動修改的版本,與目前標線可能不一致,仍要匯出?'))return;const imgs=chunks().map(([st,l])=>{const c=document.createElement('canvas');const W0=pw(),H0=pageH(l[0]);c.width=W0*2;c.height=H0*2;const x=c.getContext('2d');x.scale(2,2);x.fillStyle='#fff';x.fillRect(0,0,W0,H0);drawPage(CR(x,true),l,0,true,st);return c.toDataURL()});
  const pg=ori();let st=$('pgs');if(!st){st=document.createElement('style');st.id='pgs';document.head.appendChild(st)}st.textContent='@media print{@page{size:'+(a4()?'A4':'A5')+' '+(pg?'portrait':'landscape')+';margin:6mm}#P img{max-height:'+(a4()?(pg?'285mm':'198mm'):(pg?'198mm':'136mm'))+'!important}}';
  $('P').innerHTML=imgs.map(u=>'<img src="'+u+'">').join('');setTimeout(()=>print(),300)};
