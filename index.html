@@ -36,8 +36,9 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <div class="f"><label>X (m,向右為正)</label><input id="px" type="number" step="any" value="0"></div>
 <div class="f"><label>Y (m,向上為正)</label><input id="py" type="number" step="any" value="0"></div>
 <div class="f"><label>角度(°,0=向右 90=向上)</label><input id="pa" type="number" step="any" value="0"></div>
-<div class="f"><label>方向</label><span><button class="ab" data-a="0">→</button><button class="ab" data-a="90">↑</button><button class="ab" data-a="180">←</button><button class="ab" data-a="270">↓</button></span></div>
-<div class="nt">在圖面上:拖曳圖示可移動位置;點圖示可編輯(編輯中按 Delete 鍵或「刪除此圖」可刪除);Ctrl+Z 復原;點空白處可設定新增位置(半透明為預覽);拖曳空白處可平移畫面、滾輪縮放、雙擊空白處還原視角。</div>
+<div class="f"><label>朝向(圖形或線的方向)</label><span><button class="ab" data-a="0">→</button><button class="ab" data-a="90">↑</button><button class="ab" data-a="180">←</button><button class="ab" data-a="270">↓</button></span></div>
+<div class="f"><label>微調旋轉</label><span><button class="rb" type="button" data-d="15" title="逆時針 15°">⟲15°</button><button class="rb" type="button" data-d="5">⟲5°</button><button class="rb" type="button" data-d="-5">⟳5°</button><button class="rb" type="button" data-d="-15" title="順時針 15°">⟳15°</button></span></div>
+<div class="nt">在圖面上:拖曳圖示可移動位置;拖曳橘色 ↻ 圓點可旋轉,圓點在哪邊、箭頭或圖形就朝哪邊(自動對齊 45 度倍數);點圖示可編輯(編輯中按 Delete 鍵或「刪除此圖」可刪除);Ctrl+Z 復原;點空白處可設定新增位置(半透明為預覽);拖曳空白處可平移畫面、滾輪縮放、雙擊空白處還原視角。</div>
 <label style="display:block;margin:4px 0"><input type="checkbox" id="gh" checked> 顯示半透明預覽圖示</label>
 <label style="display:block;margin:4px 0"><input type="checkbox" id="sb" checked> 圖面顯示比例尺(匯出也會帶出)</label>
 <button id="pvt" type="button">隱藏預覽圖</button><canvas id="pv" width="560" height="340"></canvas><div id="ar" class="nt" style="font-size:12px;color:#000"></div>
@@ -58,6 +59,7 @@ h4{margin:10px 0 3px;border-bottom:1px solid #bbb}
 <h3>二、圖面操作</h3>
 <table><tr><th>動作</th><th>電腦</th><th>手機/平板</th></tr>
 <tr><td>移動標線</td><td>拖曳圖示</td><td>手指拖曳圖示</td></tr>
+<tr><td>旋轉方向</td><td>拖曳橘色 ↻ 圓點,或按朝向、微調按鈕</td><td>手指拖曳橘色 ↻ 圓點</td></tr>
 <tr><td>編輯標線</td><td>點一下圖示</td><td>點一下圖示</td></tr>
 <tr><td>刪除標線</td><td>編輯中按 Delete 鍵或「刪除此圖」</td><td>編輯中按「刪除此圖」</td></tr>
 <tr><td>指定新增位置</td><td>點空白處</td><td>點空白處</td></tr>
@@ -429,10 +431,14 @@ function refresh(){
 let HS=[],HI=0,HT=0,HC=false;
 function hist(d){const k=HI+d;if(k<0||k>=HS.length)return;HI=k;HC=false;S.sites=JSON.parse(HS[HI]);S.cur=0;stopEdit();buildForm();$('rem').value='';defPos();refresh()}
 const ctStale=s=>s.ct!=null&&s.ctb!=null&&report(s).join('\n')!==s.ctb;
-let hits=[],drag=null,fixed=null,VW={dx:0,dy:0,z:1};let VC=[0,0];const adjView=(f,v,cx,cy)=>{VC=[cx,cy];const z=v.z,dx=v.dx,dy=v.dy;return{...f,s:f.s*z,T:q=>{const a=f.T(q);return[cx+(a[0]-cx)*z+dx,cy+(a[1]-cy)*z+dy]},inv:p=>f.inv([cx+(p[0]-dx-cx)/z,cy+(p[1]-dy-cy)/z])}};const r1=v=>Math.round(v*10)/10;
+let RH=null,ROT=false;const aoff=()=>{const it=cur();return !it||it.pr||it.id=='TXT'||it.id=='REF'||/^ARC_/.test(it.id)||(it.lin&&it.lin[0]=='L')?0:90},n360=a=>((a%360)+360)%360;let hits=[],drag=null,fixed=null,VW={dx:0,dy:0,z:1};let VC=[0,0];const adjView=(f,v,cx,cy)=>{VC=[cx,cy];const z=v.z,dx=v.dx,dy=v.dy;return{...f,s:f.s*z,T:q=>{const a=f.T(q);return[cx+(a[0]-cx)*z+dx,cy+(a[1]-cy)*z+dy]},inv:p=>f.inv([cx+(p[0]-dx-cx)/z,cy+(p[1]-dy-cy)/z])}};const r1=v=>Math.round(v*10)/10;
 function sheet(){const cv=$('cv'),M=$('M'),W=M.clientWidth,H=M.clientHeight,dpr=window.devicePixelRatio||1;if(!W||!H||!cur())return;
  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#222';c.fillRect(0,0,W,H);
  view=drawCase(CR(c,false),site(),0,0,W,H,false,13,S.cur,$('gh').checked?draftEn():null,edit,fixed,{vw:VW});
+ RH=null;if($('gh').checked&&cur()){const a=(num('pa')+aoff())*Math.PI/180,O=view.T([num('px'),-num('py')]),Hh=[O[0]+64*Math.cos(a),O[1]-64*Math.sin(a)];RH={o:O,h:Hh};
+  c.save();c.globalAlpha=1;c.strokeStyle='#f59e0b';c.fillStyle='#f59e0b';c.lineWidth=1.5;c.setLineDash([4,3]);c.beginPath();c.moveTo(O[0],O[1]);c.lineTo(Hh[0],Hh[1]);c.stroke();c.setLineDash([]);
+  c.beginPath();c.arc(O[0],O[1],3,0,6.2832);c.fill();c.beginPath();c.arc(Hh[0],Hh[1],11,0,6.2832);c.fill();c.fillStyle='#222';c.font='bold 14px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('↻',Hh[0],Hh[1]+1);
+  if(ROT){c.fillStyle='#f59e0b';c.font='bold 13px sans-serif';c.fillText(num('pa')+'°',Hh[0],Hh[1]-20)}c.restore()}
  hits=[];site().ent.forEach((e,i)=>{if(i==edit)return;const P=planPrims(e).filter(g=>g.k!='nt');if(!P.length)return;const[a,b,c2,d]=bbox(P),A=view.T([a,b]),B=view.T([c2,d]);hits.push({i,x0:Math.min(A[0],B[0])-7,x1:Math.max(A[0],B[0])+7,y0:Math.min(A[1],B[1])-7,y1:Math.max(A[1],B[1])+7})})}
 const cvp=e=>{const b=$('cv').getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
 const hitAt=p=>{for(let i=hits.length-1;i>=0;i--){const h=hits[i];if(p[0]>=h.x0&&p[0]<=h.x1&&p[1]>=h.y0&&p[1]<=h.y1)return h.i}return -1};
@@ -441,7 +447,7 @@ $('cv').onpointermove=e=>{const p=cvp(e);if(drag&&drag.k<0){const dx=p[0]-drag.p
 $('cv').onwheel=e=>{e.preventDefault();const z0=VW.z,z=Math.min(8,Math.max(.2,z0*(e.deltaY<0?1.15:1/1.15))),p=cvp(e),r=z/z0;VW.dx=(p[0]-VC[0])-(p[0]-VC[0]-VW.dx)*r;VW.dy=(p[1]-VC[1])-(p[1]-VC[1]-VW.dy)*r;VW.z=z;sheet()};
 $('cv').ondblclick=()=>{VW={dx:0,dy:0,z:1};sheet()};
 $('cv').onpointerup=e=>{if(!drag)return;const d=drag;drag=null;fixed=null;if(d.k>=0){if(d.moved)refresh();else startEdit(d.k)}else if(!d.moved){const w=d.fv.inv(cvp(e));$('px').value=r1(w[0]);$('py').value=r1(-w[1]);sheet()}};
-['px','py','pa','rem'].forEach(i=>$(i).oninput=sheet);document.querySelectorAll('.ab').forEach(b=>b.onclick=()=>{$('pa').value=b.dataset.a;sheet()});
+['px','py','pa','rem'].forEach(i=>$(i).oninput=sheet);document.querySelectorAll('.ab').forEach(b=>b.onclick=()=>{$('pa').value=n360(+b.dataset.a-aoff());sheet()});
 $('ents').onclick=e=>{const t=e.target.dataset;e.preventDefault();
  if(t.k!=null){site().ent.splice(+t.k,1);if(edit>=0)stopEdit();refresh()}
  else if(t.cp!=null){const o=site().ent[+t.cp];site().ent.push({...o,v:{...o.v},y:(o.y||0)-2});refresh()}
@@ -589,6 +595,11 @@ fillItems();buildForm();defPos();refresh();
 (()=>{const cv=$('cv'),PT=new Map();let pin=null,was=false;
  const zoomAt=(p,z)=>{const z0=VW.z,r=z/z0;VW.dx=(p[0]-VC[0])-(p[0]-VC[0]-VW.dx)*r;VW.dy=(p[1]-VC[1])-(p[1]-VC[1]-VW.dy)*r;VW.z=z;sheet()};
  const cl=z=>Math.min(8,Math.max(.2,z));
+ const snapA=a=>{a=Math.round(a/5)*5;const m=Math.round(a/45)*45;if(Math.abs(a-m)<=5)a=m;return((a%360)+360)%360};
+ cv.addEventListener('pointerdown',e=>{const p=cvp(e);if(RH&&PT.size==0&&Math.hypot(p[0]-RH.h[0],p[1]-RH.h[1])<=(e.pointerType=='touch'?24:14)){ROT=true;fixed=view;cv.setPointerCapture(e.pointerId);e.stopImmediatePropagation();sheet()}},true);
+ cv.addEventListener('pointermove',e=>{if(!ROT)return;const p=cvp(e),dx=p[0]-RH.o[0],dy=p[1]-RH.o[1];if(Math.hypot(dx,dy)>6){$('pa').value=n360(snapA(Math.atan2(-dy,dx)*180/Math.PI)-aoff());sheet()}e.stopImmediatePropagation()},true);
+ const rup=e=>{if(!ROT)return;ROT=false;fixed=null;e.stopImmediatePropagation();sheet()};cv.addEventListener('pointerup',rup,true);cv.addEventListener('pointercancel',rup,true);
+ document.querySelectorAll('.rb').forEach(b=>b.onclick=()=>{$('pa').value=(((num('pa')+ +b.dataset.d)%360)+360)%360;sheet()});
  cv.addEventListener('pointerdown',e=>{PT.set(e.pointerId,cvp(e));if(PT.size==2){const[a,b]=[...PT.values()];pin={d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,z:VW.z};drag=null;fixed=null;was=true;e.stopImmediatePropagation()}else if(PT.size>2)e.stopImmediatePropagation()},true);
  cv.addEventListener('pointermove',e=>{if(!PT.has(e.pointerId))return;PT.set(e.pointerId,cvp(e));if(pin&&PT.size>=2){const[a,b]=[...PT.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1])||1;zoomAt([(a[0]+b[0])/2,(a[1]+b[1])/2],cl(pin.z*d/pin.d));e.stopImmediatePropagation()}},true);
  const up=e=>{PT.delete(e.pointerId);if(PT.size<2)pin=null;if(was){e.stopImmediatePropagation();drag=null;if(PT.size==0)was=false}};
